@@ -7,7 +7,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @Theme(ValoTheme.THEME_NAME)
 public class MainUI extends UI {
-
+//test
     @Override
     protected void init(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();
