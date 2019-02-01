@@ -4,6 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "mechanic")
+@NamedQueries({
+        @NamedQuery(name = "Mechanic.findAll", query = "select m from Mechanic m"),
+        @NamedQuery(name = "Mechanic.findById", query = "select m from Mechanic m where id = :id")
+})
 public class Mechanic {
     @Id
 //    @Column(name = "id")

@@ -5,6 +5,10 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "ordr") // "ORDER" is a reserved keyword
+@NamedQueries({
+        @NamedQuery(name = "Order.findAll", query = "select o from Order o"),
+        @NamedQuery(name = "Order.findById", query = "select o from Order o where id = :id")
+})
 public class Order {
     @Id
 //    @Column(name = "id")

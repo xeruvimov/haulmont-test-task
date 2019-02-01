@@ -1,31 +1,31 @@
 package com.haulmont.testtask.data.daoimpl;
 
-import com.haulmont.testtask.data.dao.ClientDAO;
-import com.haulmont.testtask.data.entity.Client;
+import com.haulmont.testtask.data.dao.MechanicDAO;
+import com.haulmont.testtask.data.entity.Mechanic;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.Collection;
 
-public class ClientDAOImpl implements ClientDAO {
+public class MechanicDAOImpl implements MechanicDAO {
     private EntityManagerFactory entityManagerFactory;
 
-    public ClientDAOImpl() {
+    public MechanicDAOImpl() {
         this.entityManagerFactory = JPAUtil.getEntityManagerFactory();
     }
 
     @Override
-    public void insert(Client client) {
+    public void insert(Mechanic mechanic) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             entityTransaction.begin();
-            entityManager.persist(client);
+            entityManager.persist(mechanic);
             entityManager.flush();
             entityTransaction.commit();
         } catch (Exception e) {
-            System.err.println("Insert client: " + client + " is fail");
+            System.err.println("Insert mechanic: " + mechanic + " is fail");
         } finally {
             if (entityTransaction.isActive()) entityTransaction.rollback();
             entityManager.close();
@@ -33,16 +33,16 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
     @Override
-    public void delete(Client client) {
+    public void delete(Mechanic mechanic) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             entityTransaction.begin();
-            entityManager.remove(client);
+            entityManager.remove(mechanic);
             entityManager.flush();
             entityTransaction.commit();
         } catch (Exception e) {
-            System.err.println("Delete client: " + client + " is fail");
+            System.err.println("Delete mechanic: " + mechanic + " is fail");
         } finally {
             if (entityTransaction.isActive()) entityTransaction.rollback();
             entityManager.close();
@@ -50,18 +50,18 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
     @Override
-    public Client findByID(Long id) {
+    public Mechanic findByID(Long id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        Client result = null;
+        Mechanic result = null;
         try {
             entityTransaction.begin();
-            result = entityManager.createNamedQuery("Client.findById", Client.class)
+            result = entityManager.createNamedQuery("Mechanic.findById", Mechanic.class)
                     .setParameter("id", id).getSingleResult();
             entityManager.flush();
             entityTransaction.commit();
         } catch (Exception e) {
-            System.err.println("Find client by id: " + id + " is fail");
+            System.err.println("Find mechanic by id: " + id + " is fail");
         } finally {
             if (entityTransaction.isActive()) entityTransaction.rollback();
             entityManager.close();
@@ -70,16 +70,16 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
     @Override
-    public void update(Client client) {
+    public void update(Mechanic mechanic) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             entityTransaction.begin();
-            entityManager.merge(client);
+            entityManager.merge(mechanic);
             entityManager.flush();
             entityTransaction.commit();
         } catch (Exception e) {
-            System.err.println("Update client: " + client + " fail");
+            System.err.println("Update mechanic: " + mechanic + " fail");
         } finally {
             if (entityTransaction.isActive()) entityTransaction.rollback();
             entityManager.close();
@@ -87,19 +87,19 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
     @Override
-    public void saveOrUpdate(Client client) {
+    public void saveOrUpdate(Mechanic mechanic) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             entityTransaction.begin();
-            if (client.getId() == null)
-                entityManager.persist(client);
+            if (mechanic.getId() == null)
+                entityManager.persist(mechanic);
             else
-                entityManager.merge(client);
+                entityManager.merge(mechanic);
             entityManager.flush();
             entityTransaction.commit();
         } catch (Exception e) {
-            System.err.println("Save or update client: " + client + " is fail");
+            System.err.println("Save or update mechanic: " + mechanic + " is fail");
         } finally {
             if (entityTransaction.isActive()) entityTransaction.rollback();
             entityManager.close();
@@ -107,17 +107,17 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
     @Override
-    public Collection<Client> getAll() {
+    public Collection<Mechanic> getAll() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        Collection<Client> result = null;
+        Collection<Mechanic> result = null;
         try {
             entityTransaction.begin();
-            result = entityManager.createNamedQuery("Client.findAll", Client.class).getResultList();
+            result = entityManager.createNamedQuery("Mechanic.findAll", Mechanic.class).getResultList();
             entityManager.flush();
             entityTransaction.commit();
         } catch (Exception e) {
-            System.err.println("Find all clients is fail");
+            System.err.println("Find all mechanic is fail");
         } finally {
             if (entityTransaction.isActive()) entityTransaction.rollback();
             entityManager.close();

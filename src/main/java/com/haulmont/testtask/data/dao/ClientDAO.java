@@ -5,15 +5,15 @@ import com.haulmont.testtask.data.entity.Client;
 import java.util.Collection;
 
 public interface ClientDAO {
-    void insert(Client item);
+    void insert(Client client);
 
-    void delete(Client item);
+    void delete(Client client);
 
     Client findByID(Long id);
 
-    void update(Client item);
+    void update(Client client);
 
-    void saveOrUpdate(Client item);
+    void saveOrUpdate(Client client);
 
     Collection<Client> getAll();
 }
