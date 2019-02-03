@@ -1,4 +1,4 @@
-package com.haulmont.testtask.data.daoimpl;
+package com.haulmont.testtask.data.dao.daoimpl;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
