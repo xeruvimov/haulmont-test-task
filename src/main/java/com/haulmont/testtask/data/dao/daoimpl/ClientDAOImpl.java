@@ -2,16 +2,25 @@ package com.haulmont.testtask.data.dao.daoimpl;
 
 import com.haulmont.testtask.data.dao.ClientDAO;
 import com.haulmont.testtask.data.entity.Client;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 
-public class ClientDAOImpl extends Transactional<Client> implements ClientDAO {
+public class ClientDAOImpl implements ClientDAO {
+    private Transactional<Client> transactional;
+    private static final Logger LOGGER = LogManager.getLogger(ClientDAOImpl.class);
+
+    public ClientDAOImpl() {
+        this.transactional = new Transactional<>(LOGGER);
+    }
+
     @Override
     public void insert(Client client) {
         String message = "Merge client " + client;
 
-        this.transaction((x -> {
-            this.entityManager.merge(x);
+        this.transactional.transaction((x -> {
+            this.transactional.getEntityManager().merge(x);
             LOGGER.info(message);
         }), client, message);
     }
@@ -20,10 +29,11 @@ public class ClientDAOImpl extends Transactional<Client> implements ClientDAO {
     public void delete(Client client) {
         String message = "Delete client " + client;
 
-        this.transaction((x -> {
-            Client removeClient = entityManager.find(Client.class, x);
+        this.transactional.transaction((x -> {
+            Client removeClient = this.transactional.getEntityManager().find(Client.class, x.getId());
             if (removeClient != null)
-                entityManager.remove(removeClient);
+                this.transactional.getEntityManager().remove(removeClient);
+            this.transactional.getEntityManager().flush();
             LOGGER.info(message);
         }), client, message);
     }
@@ -32,8 +42,8 @@ public class ClientDAOImpl extends Transactional<Client> implements ClientDAO {
     public Client findByID(Long id) {
         String message = "Find client by id: " + id;
 
-        return this.transaction(() -> {
-            Client result = entityManager.createNamedQuery("Client.findById", Client.class)
+        return this.transactional.transaction(() -> {
+            Client result = this.transactional.getEntityManager().createNamedQuery("Client.findById", Client.class)
                     .setParameter("id", id).getSingleResult();
             LOGGER.info(message);
             return result;
@@ -44,8 +54,8 @@ public class ClientDAOImpl extends Transactional<Client> implements ClientDAO {
     public void update(Client client) {
         String message = "Update client: " + client;
 
-        this.transaction((x -> {
-            entityManager.merge(x);
+        this.transactional.transaction((x -> {
+            this.transactional.getEntityManager().merge(x);
             LOGGER.info(message);
         }), client, message);
     }
@@ -54,11 +64,11 @@ public class ClientDAOImpl extends Transactional<Client> implements ClientDAO {
     public void saveOrUpdate(Client client) {
         String message = "Save or update client: " + client;
 
-        this.transaction((x -> {
+        this.transactional.transaction((x -> {
             if (x.getId() == null)
-                entityManager.persist(x);
+                this.transactional.getEntityManager().persist(x);
             else
-                entityManager.merge(x);
+                this.transactional.getEntityManager().merge(x);
             LOGGER.info(message);
         }), client, message);
     }
@@ -67,9 +77,10 @@ public class ClientDAOImpl extends Transactional<Client> implements ClientDAO {
     public Collection<Client> getAll() {
         String message = "Find all clients";
 
-        return this.transaction(() -> {
+        return this.transactional.transaction(() -> {
             Collection<Client> result =
-                    entityManager.createNamedQuery("Client.findAll", Client.class).getResultList();
+                    this.transactional.getEntityManager()
+                            .createNamedQuery("Client.findAll", Client.class).getResultList();
             LOGGER.info(message);
             return result;
         }, message);
