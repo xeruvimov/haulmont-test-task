@@ -127,7 +127,6 @@ public class MainUI extends UI {
         this.grid.setContainerDataSource(Objects.requireNonNull(container));
     }
 
-    //TODO
     private void setControlButtonListeners(Class item) {
         setDeleteButton(item);
         setChangeButton(item);
@@ -155,7 +154,8 @@ public class MainUI extends UI {
                 }
 
                 if (check != null) {
-                    Notification.show("This client or mechanic have active order", Notification.Type.ERROR_MESSAGE);
+                    Notification.show("This client or mechanic have active order",
+                            Notification.Type.ERROR_MESSAGE);
                 } else {
                     this.grid.getContainerDataSource().removeItem(selected);
                     this.grid.getSelectionModel().reset();
@@ -165,9 +165,29 @@ public class MainUI extends UI {
     }
 
     private void setChangeButton(Class item) {
-        this.buttonAdd.getListeners(Button.ClickEvent.class)
-                .forEach(listener -> this.buttonDelete.removeListener(Button.ClickEvent.class, listener));
-        //todo
+        this.buttonChange.getListeners(Button.ClickEvent.class)
+                .forEach(listener -> this.buttonChange.removeListener(Button.ClickEvent.class, listener));
+        this.buttonChange.addClickListener((Button.ClickListener) (clickEvent) -> {
+            Object selected = ((Grid.SingleSelectionModel)
+                    this.grid.getSelectionModel()).getSelectedRow();
+
+            if (selected != null) {
+                if (item.equals(Client.class)) {
+                    addWindow(new ClientChangeWindow((Client) selected,
+                            this.clientDAO, this.grid));
+                    this.grid.setContainerDataSource(
+                            new BeanItemContainer<>(Client.class, this.clientDAO.getAll()));
+                } else if (item.equals(Mechanic.class)) {
+                    addWindow(new MechanicChangeWindow((Mechanic) selected,
+                            this.mechanicDAO, this.grid));
+                    this.grid.setContainerDataSource(
+                            new BeanItemContainer<>(Mechanic.class, this.mechanicDAO.getAll()));
+                } else if (item.equals(Order.class)) {
+                    addWindow(new OrderChangeWindow((Order) selected,
+                            this.orderDAO, this.clientDAO, this.mechanicDAO, this.grid));
+                }
+            }
+        });
     }
 
     private void setAddButton(Class item) {

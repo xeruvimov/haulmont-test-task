@@ -64,12 +64,14 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", first_name='" + firstName + '\'' +
-                ", second_name='" + secondName + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                ", number='" + number + '\'' +
-                '}';
+        return id + " " + firstName + " " + secondName + " " + patronymic;
+
+//        return "Client{" +
+//                "id=" + id +
+//                ", first_name='" + firstName + '\'' +
+//                ", second_name='" + secondName + '\'' +
+//                ", patronymic='" + patronymic + '\'' +
+//                ", number='" + number + '\'' +
+//                '}';
     }
 }

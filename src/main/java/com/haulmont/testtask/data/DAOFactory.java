@@ -8,12 +8,6 @@ import com.haulmont.testtask.data.dao.daoimpl.MechanicDAOImpl;
 import com.haulmont.testtask.data.dao.daoimpl.OrderDAOImpl;
 
 public class DAOFactory {
-    private static DAOFactory ourInstance = new DAOFactory();
-
-    public static DAOFactory getInstance() {
-        return ourInstance;
-    }
-
     private DAOFactory() {
     }
 

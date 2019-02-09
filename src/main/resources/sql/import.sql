@@ -14,7 +14,7 @@ insert into MECHANIC
 ('Joseph', 'Stalin', 'Vissarionovich', 400),
 ('Leon', 'Trotsky', 'Davidovich', 500);
 
-insert into ORDR
+insert into CONTRACT
 (CLIENT_ID, MECHANIC_ID, DESCRIPTION, START_DATE, END_DATE, PRICE, STATUS) VALUES
 (0, 0, 'Libertarianism', '2019-11-11', '2019-11-13', 1000, 'PLANNED'),
 (1, 1, 'Anarcho-capitalism', '2019-11-11', '2019-11-13', 2000, 'DONE'),

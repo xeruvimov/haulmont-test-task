@@ -64,12 +64,14 @@ public class Mechanic {
 
     @Override
     public String toString() {
-        return "Mechanic{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                ", number=" + taxes +
-                '}';
+        return id + " " + firstName + " " + secondName + " " + patronymic;
+
+//        return "Mechanic{" +
+//                "id=" + id +
+//                ", firstName='" + firstName + '\'' +
+//                ", secondName='" + secondName + '\'' +
+//                ", patronymic='" + patronymic + '\'' +
+//                ", number=" + taxes +
+//                '}';
     }
 }

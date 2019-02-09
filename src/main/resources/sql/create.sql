@@ -14,7 +14,7 @@ patronymic varchar(50) not null,
 taxes int not null
 );
 
-create table if not exists ordr (
+create table if not exists contract (
 id bigint identity primary key ,
 client_id bigint not null foreign key references client(id),
 mechanic_id bigint not null foreign key references mechanic(id),
