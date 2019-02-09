@@ -7,6 +7,9 @@ import com.haulmont.testtask.data.dao.OrderDAO;
 import com.haulmont.testtask.data.entity.Client;
 import com.haulmont.testtask.data.entity.Mechanic;
 import com.haulmont.testtask.data.entity.Order;
+import com.haulmont.testtask.view.window.ClientWindow;
+import com.haulmont.testtask.view.window.MechanicWindow;
+import com.haulmont.testtask.view.window.OrderWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
@@ -173,17 +176,11 @@ public class MainUI extends UI {
 
             if (selected != null) {
                 if (item.equals(Client.class)) {
-                    addWindow(new ClientChangeWindow((Client) selected,
-                            this.clientDAO, this.grid));
-                    this.grid.setContainerDataSource(
-                            new BeanItemContainer<>(Client.class, this.clientDAO.getAll()));
+                    addWindow(new ClientWindow((Client) selected, this.clientDAO, this.grid));
                 } else if (item.equals(Mechanic.class)) {
-                    addWindow(new MechanicChangeWindow((Mechanic) selected,
-                            this.mechanicDAO, this.grid));
-                    this.grid.setContainerDataSource(
-                            new BeanItemContainer<>(Mechanic.class, this.mechanicDAO.getAll()));
+                    addWindow(new MechanicWindow((Mechanic) selected, this.mechanicDAO, this.grid));
                 } else if (item.equals(Order.class)) {
-                    addWindow(new OrderChangeWindow((Order) selected,
+                    addWindow(new OrderWindow((Order) selected,
                             this.orderDAO, this.clientDAO, this.mechanicDAO, this.grid));
                 }
             }
@@ -191,6 +188,16 @@ public class MainUI extends UI {
     }
 
     private void setAddButton(Class item) {
-        //TODO
+        this.buttonAdd.getListeners(Button.ClickEvent.class)
+                .forEach(listener -> this.buttonAdd.removeListener(Button.ClickEvent.class, listener));
+        this.buttonAdd.addClickListener((Button.ClickListener) (clickEvent) -> {
+            if (item.equals(Client.class)) {
+                addWindow(new ClientWindow(this.clientDAO, this.grid));
+            } else if (item.equals(Mechanic.class)) {
+                addWindow(new MechanicWindow(this.mechanicDAO, this.grid));
+            } else if (item.equals(Order.class)) {
+                addWindow(new OrderWindow(this.orderDAO, this.clientDAO, this.mechanicDAO, this.grid));
+            }
+        });
     }
 }
