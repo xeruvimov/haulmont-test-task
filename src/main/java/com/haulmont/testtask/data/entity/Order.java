@@ -1,17 +1,17 @@
 package com.haulmont.testtask.data.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "CONTRACT") // "ORDER" is a reserved keyword
 @NamedQueries({
         @NamedQuery(name = "Order.findAll", query = "select o from Order o"),
-        @NamedQuery(name = "Order.findById", query = "select o from Order o where id = :id")
+        @NamedQuery(name = "Order.findById", query = "select o from Order o where id = :id"),
+        @NamedQuery(name = "Order.findByMechanic", query = "select o from Order o where mechanic = :mechanic")
 })
 public class Order {
     @Id
-//    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,9 +27,11 @@ public class Order {
     private String description;
 
     @Column(name = "start_date")
+    @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Column(name = "end_date")
+    @Temporal(TemporalType.DATE)
     private Date endDate;
 
     @Column(name = "price")

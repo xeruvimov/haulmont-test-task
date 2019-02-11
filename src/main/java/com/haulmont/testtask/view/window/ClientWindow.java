@@ -74,10 +74,6 @@ public class ClientWindow extends AbstractWindow {
         setContent(this.main);
     }
 
-    private void initCancelButton() {
-        this.cancelButton.addClickListener((Button.ClickListener) clickEvent -> this.close());
-    }
-
     private void refreshGrid() {
         this.grid.setContainerDataSource(
                 new BeanItemContainer<>(Client.class, this.clientDAO.getAll()));

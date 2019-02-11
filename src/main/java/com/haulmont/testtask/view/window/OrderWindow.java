@@ -164,10 +164,6 @@ public class OrderWindow extends AbstractWindow {
                 new BeanItemContainer<>(Status.class, Arrays.asList(Status.values())));
     }
 
-    private void initCancelButton() {
-        this.cancelButton.addClickListener((Button.ClickListener) clickEvent -> this.close());
-    }
-
     private void refreshGrid() {
         this.grid.setContainerDataSource(
                 new BeanItemContainer<>(Order.class, this.orderDAO.getAll()));

@@ -10,7 +10,6 @@ import javax.persistence.*;
 })
 public class Mechanic {
     @Id
-//    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -65,13 +64,5 @@ public class Mechanic {
     @Override
     public String toString() {
         return id + " " + firstName + " " + secondName + " " + patronymic;
-
-//        return "Mechanic{" +
-//                "id=" + id +
-//                ", firstName='" + firstName + '\'' +
-//                ", secondName='" + secondName + '\'' +
-//                ", patronymic='" + patronymic + '\'' +
-//                ", number=" + taxes +
-//                '}';
     }
 }

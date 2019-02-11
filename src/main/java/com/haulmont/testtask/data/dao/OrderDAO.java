@@ -1,5 +1,6 @@
 package com.haulmont.testtask.data.dao;
 
+import com.haulmont.testtask.data.entity.Mechanic;
 import com.haulmont.testtask.data.entity.Order;
 
 import java.util.Collection;
@@ -19,4 +20,6 @@ public interface OrderDAO {
     Collection<Order> getAll();
 
     Collection<Order> findByDescriptionAndStatusAndClient(Map<String, Object> criteria);
+
+    Collection<Order> findByMechanic(Mechanic mechanic);
 }

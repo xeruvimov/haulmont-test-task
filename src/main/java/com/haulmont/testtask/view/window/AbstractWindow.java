@@ -12,7 +12,7 @@ abstract class AbstractWindow extends Window {
     Button okButton = new Button("OK");
     Button cancelButton = new Button("Cancel");
 
-    void configLayout(){
+    void configLayout() {
         this.buttons.setSpacing(true);
         this.buttons.setMargin(true);
 
@@ -26,5 +26,9 @@ abstract class AbstractWindow extends Window {
         setModal(true);
         setClosable(false);
         setResizable(false);
+    }
+
+    void initCancelButton() {
+        this.cancelButton.addClickListener((Button.ClickListener) clickEvent -> this.close());
     }
 }

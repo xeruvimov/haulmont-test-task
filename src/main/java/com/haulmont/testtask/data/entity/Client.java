@@ -11,7 +11,6 @@ import javax.persistence.*;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
     private Long id;
 
     @Column(name = "first_name")
@@ -65,13 +64,5 @@ public class Client {
     @Override
     public String toString() {
         return id + " " + firstName + " " + secondName + " " + patronymic;
-
-//        return "Client{" +
-//                "id=" + id +
-//                ", first_name='" + firstName + '\'' +
-//                ", second_name='" + secondName + '\'' +
-//                ", patronymic='" + patronymic + '\'' +
-//                ", number='" + number + '\'' +
-//                '}';
     }
 }

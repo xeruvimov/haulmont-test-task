@@ -37,22 +37,6 @@ class Transactional<T> {
         }
     }
 
-    //TODO delete this?
-//    protected <R> T transaction(Function<R, T> action, R object, String message) {
-//        initTransaction();
-//        T result = null;
-//        try {
-//            this.entityTransaction.begin();
-//            result = action.apply(object);
-//            this.entityTransaction.commit();
-//        } catch (Exception e) {
-//            logger.error(message + " is fail");
-//        } finally {
-//            closeTransaction();
-//        }
-//        return result;
-//    }
-
     <R> R transaction(Supplier<R> action, String message) {
         initTransaction();
         R result = null;

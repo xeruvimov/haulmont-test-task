@@ -7,17 +7,19 @@ import com.haulmont.testtask.data.dao.OrderDAO;
 import com.haulmont.testtask.data.entity.Client;
 import com.haulmont.testtask.data.entity.Mechanic;
 import com.haulmont.testtask.data.entity.Order;
+import com.haulmont.testtask.data.entity.Status;
 import com.haulmont.testtask.view.window.ClientWindow;
+import com.haulmont.testtask.view.window.MechanicStatWindow;
 import com.haulmont.testtask.view.window.MechanicWindow;
 import com.haulmont.testtask.view.window.OrderWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 @Theme(value = ValoTheme.THEME_NAME)
 public class MainUI extends UI {
@@ -27,14 +29,16 @@ public class MainUI extends UI {
     private Button buttonMechanic = new Button("Mechanics");
     private Button buttonOrder = new Button("Orders");
     private String leftButtonWidth = "200px";
-    private String leftMenuWidth = "400px";
+    private String leftMenuWidth = "230px";
 
     private Button buttonAdd = new Button("Add new object");
     private Button buttonChange = new Button("Change selected");
     private Button buttonDelete = new Button("Delete selected");
 
-    private Label label = new Label("Test label");
+    private Label label = new Label();
     private Grid grid = new Grid();
+    private Panel filtersPanel = new Panel("Filters");
+    private Button statButton = new Button();
 
     private ClientDAO clientDAO;
     private MechanicDAO mechanicDAO;
@@ -57,7 +61,7 @@ public class MainUI extends UI {
 
     private void initRightMenu() {
         this.grid.setWidth("800px");
-        this.grid.setHeight("700px");
+        this.grid.setHeight("600px");
 
         VerticalLayout rightData = new VerticalLayout();
         rightData.setSpacing(true);
@@ -73,6 +77,7 @@ public class MainUI extends UI {
 
         rightData.addComponent(controlButtons);
 
+        setRightMenu(Client.class);
         this.mainLayout.addComponent(rightData);
     }
 
@@ -100,6 +105,8 @@ public class MainUI extends UI {
         setLabel(item);
         setGrid(item);
         setControlButtonListeners(item);
+        setFiltersPanel(item);
+        setStatButton(item);
     }
 
     private void setLabel(Class item) {
@@ -128,6 +135,91 @@ public class MainUI extends UI {
         }
         this.grid.removeAllColumns();
         this.grid.setContainerDataSource(Objects.requireNonNull(container));
+        formatGrid(item);
+    }
+
+    private void formatGrid(Class item) {
+        if (item.equals(Client.class)) {
+            this.grid.setColumnOrder("id", "firstName", "secondName", "patronymic", "number");
+        } else if (item.equals(Mechanic.class)) {
+            this.grid.setColumnOrder("id", "firstName", "secondName", "patronymic", "taxes");
+        } else if (item.equals(Order.class)) {
+            this.grid.setColumnOrder("id", "description", "client", "mechanic",
+                    "startDate", "endDate", "status", "price");
+
+            this.grid.getColumn("endDate").setRenderer(new DateRenderer("%1$td/%1$tm/%1$tY"));
+            this.grid.getColumn("startDate").setRenderer(new DateRenderer("%1$td/%1$tm/%1$tY"));
+        }
+    }
+
+    private void setFiltersPanel(Class item) {
+        if (item.equals(Order.class)) {
+            String WIDTH_COMPONENT = "250px";
+
+            NativeSelect clientSelect = new NativeSelect("Select client");
+            clientSelect.setNullSelectionAllowed(true);
+            clientSelect.setContainerDataSource(new BeanItemContainer<>(Client.class, this.clientDAO.getAll()));
+            clientSelect.setWidth(WIDTH_COMPONENT);
+
+            NativeSelect statusSelect = new NativeSelect("Select status");
+            statusSelect.setNullSelectionAllowed(true);
+            statusSelect.setContainerDataSource(new BeanItemContainer<>(Status.class, Arrays.asList(Status.values())));
+            statusSelect.setWidth(WIDTH_COMPONENT);
+
+            TextField descriptionInput = new TextField("Input description");
+            descriptionInput.setWidth(WIDTH_COMPONENT);
+
+            Button filterButton = new Button("Filter");
+            filterButton.setWidth(WIDTH_COMPONENT);
+            filterButton.addClickListener((Button.ClickListener) clickEvent -> {
+                Map<String, Object> filterMap = new HashMap<>();
+                filterMap.put("client", clientSelect.getValue());
+                filterMap.put("status", statusSelect.getValue());
+                filterMap.put("description", descriptionInput.getValue());
+
+                this.grid.removeAllColumns();
+                this.grid.setContainerDataSource(
+                        new BeanItemContainer<>(Order.class,
+                                this.orderDAO.findByDescriptionAndStatusAndClient(filterMap)));
+            });
+
+            Button removeFilters = new Button("Remove filters");
+            removeFilters.setWidth(WIDTH_COMPONENT);
+            removeFilters.addClickListener((Button.ClickListener) clickEvent -> {
+                clientSelect.select(clientSelect.getNullSelectionItemId());
+                statusSelect.select(statusSelect.getNullSelectionItemId());
+                descriptionInput.clear();
+                setGrid(Order.class);
+            });
+
+            VerticalLayout panelLayout = new VerticalLayout();
+            panelLayout.setSpacing(true);
+            panelLayout.setMargin(true);
+            panelLayout.addComponent(clientSelect);
+            panelLayout.addComponent(statusSelect);
+            panelLayout.addComponent(descriptionInput);
+            panelLayout.addComponent(filterButton);
+            panelLayout.addComponent(removeFilters);
+
+            this.filtersPanel.setContent(panelLayout);
+            this.mainLayout.addComponent(this.filtersPanel);
+        } else {
+            this.mainLayout.removeComponent(this.filtersPanel);
+        }
+    }
+
+    private void setStatButton(Class item) {
+        this.statButton.getListeners(Button.ClickEvent.class)
+                .forEach(listener -> this.statButton.removeListener(Button.ClickEvent.class, listener));
+
+        if (item.equals(Mechanic.class)) {
+            this.statButton.addClickListener((Button.ClickListener) clickEvent ->
+                    addWindow(new MechanicStatWindow(this.orderDAO, this.mechanicDAO)));
+            this.statButton.setCaption("Mechanic statistic");
+            this.mainLayout.addComponent(this.statButton);
+        } else {
+            this.mainLayout.removeComponent(this.statButton);
+        }
     }
 
     private void setControlButtonListeners(Class item) {

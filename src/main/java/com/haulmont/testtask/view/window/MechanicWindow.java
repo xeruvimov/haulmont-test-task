@@ -95,10 +95,6 @@ public class MechanicWindow extends AbstractWindow {
         this.taxesField.addValidator(new RegexpValidator("^[1-9]+[0-9]*$", "Taxes invalid"));
     }
 
-    private void initCancelButton() {
-        this.cancelButton.addClickListener((Button.ClickListener) clickEvent -> this.close());
-    }
-
     private void refreshGrid() {
         this.grid.setContainerDataSource(
                 new BeanItemContainer<>(Mechanic.class, this.mechanicDAO.getAll()));
